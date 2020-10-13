@@ -1,0 +1,27 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish Configurations'
+#   inputs:
+#     PathtoPublish: conf
+#     ArtifactName: 'configurations'
+
+- task: Docker@0
+  displayName: 'Build JAR File with SBT'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    action: 'Run an image'
+    imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
+    qualifyImageName: false
+    containerName: sbt
+    volumes: '$(Build.Repository.LocalPath):/app'
+    containerCommand: 'sbt "set test in Test := {}" clean assembly'
+    detached: false
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish JAR file'
+  inputs:
+    PathtoPublish: '$(Build.Repository.LocalPath)/target/scala-2.11'
+    ArtifactName: 'jar-file'
