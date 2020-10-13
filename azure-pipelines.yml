@@ -25,3 +25,16 @@ steps:
   inputs:
     PathtoPublish: '$(Build.Repository.LocalPath)/target/scala-2.11'
     ArtifactName: 'jar-file'
+
+- task: Docker@0
+  displayName: 'Publish with SBT'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    action: 'Run an image'
+    imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
+    qualifyImageName: false
+    containerName: sbt
+    volumes: '$(Build.Repository.LocalPath):/app'
+    containerCommand: 'sbt publish'
+    detached: false
+
