@@ -33,14 +33,14 @@ steps:
     imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
     containerName: 'sbt'
     volumes: '$(Build.Repository.LocalPath):/app'
-    containerCommand: 'sbt publish'
+    containerCommand: 'sbt publish -Duser=$(repoUser) -Dpassword=$(repoPassword) -Drepourl=$(repoUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug'
     detached: false
-    envVars: |
-      user=$(repoUser)
-      password=$(repoPassword)
-      repourl=$(repoUrl)
-      version=1.0.0-MOJIO-$(Build.BuildNumber)
-      spark.version=2.3.2
-      hadoop.version=3.1.0
-      hive.version=3.1.0
-      assembly.log.level=debug
+    # envVars: |
+    #   user=$(repoUser)
+    #   password=$(repoPassword)
+    #   repourl=$(repoUrl)
+    #   version=1.0.0-MOJIO-$(Build.BuildNumber)
+    #   spark.version=2.3.2
+    #   hadoop.version=3.1.0
+    #   hive.version=3.1.0
+    #   assembly.log.level=debug
