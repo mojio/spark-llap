@@ -39,6 +39,7 @@ steps:
   displayName: 'Publish JAR file to Repo'
   inputs:
     command: 'publish'
+    # "An error occurred on the service. A potentially dangerous Request.Path value was detected from the client 
     publishDirectory: '$(Build.Repository.LocalPath)/target/scala-2.11'
     feedsToUsePublish: 'internal'
     vstsFeedPublish: '46ad552d-e239-4095-b661-fe4eaf9c92a4'
