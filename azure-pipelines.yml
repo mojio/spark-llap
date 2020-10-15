@@ -9,6 +9,18 @@ steps:
 #     ArtifactName: 'configurations'
 
 - task: Docker@0
+  displayName: 'Publish with SBT'
+  inputs:
+    action: 'Run an image'
+    imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
+    containerName: 'sbt'
+    volumes: '$(Build.Repository.LocalPath):/app'
+    containerCommand: 'sbt publish'
+    detached: false
+    envVars: |
+      JAVA_OPTS=-Duser=$(repoUser) -Dpassword=$(repoPassword) -Drepourl=$(repoUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
+
+- task: Docker@0
   displayName: 'Build JAR File with SBT'
   inputs:
     containerregistrytype: 'Container Registry'
@@ -25,24 +37,3 @@ steps:
   inputs:
     PathtoPublish: '$(Build.Repository.LocalPath)/target/scala-2.11'
     ArtifactName: 'jar-file'
-
-- task: Docker@0
-  displayName: 'Publish with SBT'
-  inputs:
-    action: 'Run an image'
-    imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
-    containerName: 'sbt'
-    volumes: '$(Build.Repository.LocalPath):/app'
-    #containerCommand: 'sbt publish -Duser=$(repoUser) -Dpassword=$(repoPassword) -Drepourl=$(repoUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug'
-    containerCommand: 'sbt publish'
-    detached: false
-    envVars: |
-      JAVA_OPTS=-Duser=$(repoUser) -Dpassword=$(repoPassword) -Drepourl=$(repoUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
-    #   user=$(repoUser)
-    #   password=$(repoPassword)
-    #   repourl=$(repoUrl)
-    #   version=1.0.0-MOJIO-$(Build.BuildNumber)
-    #   spark.version=2.3.2
-    #   hadoop.version=3.1.0
-    #   hive.version=3.1.0
-    #   assembly.log.level=debug
