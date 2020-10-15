@@ -363,7 +363,8 @@ publishArtifact in Test := false
 val username = sys.props.getOrElse("user", "user")
 val password = sys.props.getOrElse("password", "password")
 val repourl = sys.props.getOrElse("repourl", "https://example.com")
-val host = new java.net.URL(repourl).getHost
+val host = sys.props.getOrElse("repohost", new java.net.URL(repourl).getHost)
+// val host = new java.net.URL(repourl).getHost
 
 isSnapshot := true // To allow overwriting for internal nexus
 credentials += Credentials("Sonatype Nexus Repository Manager", host, username, password)
