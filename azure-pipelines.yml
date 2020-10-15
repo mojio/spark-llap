@@ -18,7 +18,9 @@ steps:
     containerCommand: 'sbt publish'
     detached: false
     envVars: |
-      JAVA_OPTS=-Duser=$(repoUser) -Dpassword=$(repoPassword) -Drepourl=$(repoUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
+      JAVA_OPTS=-Duser=$(githubPackagesUser) -Dpassword=$(githubPackagesPassword) -Drepourl=$(githubPackagesUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
+# I would have *preferred* to keep everything inside Azure DevOps, but MS has an incompatibility with SBT: https://github.com/sbt/sbt/issues/5483 and https://github.com/sbt/ivy/pull/40
+#      JAVA_OPTS=-Duser=$(azDevOpsArtifactsUser) -Dpassword=$(azDevOpsArtifactsPassword) -Drepourl=$(azDevOpsArtifactsUrl) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
 
 - task: Docker@0
   displayName: 'Build JAR File with SBT'
