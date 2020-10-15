@@ -9,20 +9,6 @@ steps:
 #     ArtifactName: 'configurations'
 
 - task: Docker@0
-  displayName: 'Publish with SBT'
-  inputs:
-    action: 'Run an image'
-    imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
-    containerName: 'sbt'
-    volumes: '$(Build.Repository.LocalPath):/app'
-    containerCommand: 'sbt publish'
-    detached: false
-    envVars: |
-      JAVA_OPTS=-Duser=$(githubPackagesUser) -Dpassword=$(githubPackagesPassword) -Drepourl=$(githubPackagesUrl) -Drepohost=$(githubPackagesHost) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
-# I would have *preferred* to keep everything inside Azure DevOps, but MS has an incompatibility with SBT: https://github.com/sbt/sbt/issues/5483 and https://github.com/sbt/ivy/pull/40
-#      JAVA_OPTS=-Duser=$(azDevOpsArtifactsUser) -Dpassword=$(azDevOpsArtifactsPassword) -Drepourl=$(azDevOpsArtifactsUrl) -Drepohost=$(azDevOpsPackagesHost) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
-
-- task: Docker@0
   displayName: 'Build JAR File with SBT'
   inputs:
     containerregistrytype: 'Container Registry'
@@ -35,7 +21,31 @@ steps:
     detached: false
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish JAR file'
+  displayName: 'Publish JAR file to Artifacts'
   inputs:
     PathtoPublish: '$(Build.Repository.LocalPath)/target/scala-2.11'
     ArtifactName: 'jar-file'
+
+- task: AzureCLI@2
+  displayName: 'Publish JAR file to Repo'
+  inputs:
+    azureSubscription: 'BizSpark Development (RM)'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az artifacts universal publish --organization https://dev.azure.com/mojio/ --feed Analytics --name com.hortonworks.hive:hive-warehouse-connector-assembly --version 1.0.0-MOJIO-$(Build.BuildNumber) --description "From Azure DevOps Build" --path $(Build.Repository.LocalPath)/target/scala-2.11
+
+
+# - task: Docker@0
+#   displayName: 'Publish with SBT'
+#   inputs:
+#     action: 'Run an image'
+#     imageName: 'bigtruedata/sbt:0.13.15-2.12.2'
+#     containerName: 'sbt'
+#     volumes: '$(Build.Repository.LocalPath):/app'
+#     containerCommand: 'sbt publish'
+#     detached: false
+#     envVars: |
+#       JAVA_OPTS=-Duser=$(githubPackagesUser) -Dpassword=$(githubPackagesPassword) -Drepourl=$(githubPackagesUrl) -Drepohost=$(githubPackagesHost) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
+# # I would have *preferred* to keep everything inside Azure DevOps, but MS has an incompatibility with SBT: https://github.com/sbt/sbt/issues/5483 and https://github.com/sbt/ivy/pull/40
+# #      JAVA_OPTS=-Duser=$(azDevOpsArtifactsUser) -Dpassword=$(azDevOpsArtifactsPassword) -Drepourl=$(azDevOpsArtifactsUrl) -Drepohost=$(azDevOpsPackagesHost) -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) -Dspark.version=2.3.2 -Dhadoop.version=3.1.0 -Dhive.version=3.1.0 -Dassembly.log.level=debug
