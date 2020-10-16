@@ -67,7 +67,15 @@ steps:
     inlineScript: |
       # deploy jar to github packages
       mvn deploy:deploy-file -Dregistry=$(githubPackagesUrl) \
-                       -Dtoken=$(githubPackagesPassword)
+                       -DrepositoryId=Analytics \
+                       -Dfile=$(Build.Repository.LocalPath)/target/scala-2.11/hive-warehouse-connector-assembly-1.0.0-MOJIO-2.jar
+                       -Dtoken=$(githubPackagesPassword) \
+                       -DgeneratePom=true \
+                       -DgeneratePom.description="Mojio Hive Connector" \
+                       -Dpackaging=jar \
+                       -Dversion=1.0.0-MOJIO-$(Build.BuildNumber) \
+                       -DgroupId=com.hortonworks.hive \
+                       -DartifactId=hive-warehouse-connector-assembly 
 
       # mvn deploy:deploy-file -Durl=file://C:\m2-repo \
       #                  -DrepositoryId=some.id \
