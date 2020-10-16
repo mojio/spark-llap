@@ -65,7 +65,8 @@ steps:
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      mvn deploy:deploy-file "-Durl=$(githubPackagesUrl)" "-DrepositoryId=Analytics" "-Dfile=$(Build.Repository.LocalPath)/target/scala-2.11/hive-warehouse-connector-assembly-1.0.0-MOJIO-2.jar" "-Dtoken=$(githubPackagesPassword)" "-DgeneratePom=true" "-DgeneratePom.description=mojiohiveconnector" "-Dpackaging=jar" "-Dversion=1.0.0-MOJIO-$(Build.BuildNumber)" "-DgroupId=com.hortonworks.hive" "-DartifactId=hive-warehouse-connector-assembly"
+      # mvn deploy:deploy-file "-Durl=$(githubPackagesUrl)" "-DrepositoryId=Analytics" "-Dfile=$(Build.Repository.LocalPath)/target/scala-2.11/hive-warehouse-connector-assembly-1.0.0-MOJIO-2.jar" "-Dtoken=$(githubPackagesPassword)" "-DgeneratePom=true" "-DgeneratePom.description=mojiohiveconnector" "-Dpackaging=jar" "-Dversion=1.0.0-MOJIO-$(Build.BuildNumber)" "-DgroupId=com.hortonworks.hive" "-DartifactId=hive-warehouse-connector-assembly"
+      mvn deploy:deploy-file "-Durl=$(azDevOpsArtifactsUrl)" "-DrepositoryId=Analytics" "-Dfile=$(Build.Repository.LocalPath)/target/scala-2.11/hive-warehouse-connector-assembly-1.0.0-MOJIO-2.jar" "-Dtoken=$(azDevOpsArtifactsPassword)" "-DgeneratePom=true" "-DgeneratePom.description=mojiohiveconnector" "-Dpackaging=jar" "-Dversion=1.0.0-MOJIO-$(Build.BuildNumber)" "-DgroupId=com.hortonworks.hive" "-DartifactId=hive-warehouse-connector-assembly"
 
 # - task: Docker@0
 #   displayName: 'Publish with SBT'
