@@ -68,7 +68,7 @@ steps:
       # deploy jar to github packages
       mvn deploy:deploy-file -Dregistry=$(githubPackagesUrl) \
                        -DrepositoryId=Analytics \
-                       -Dfile=$(Build.Repository.LocalPath)/target/scala-2.11/hive-warehouse-connector-assembly-1.0.0-MOJIO-2.jar
+                       -Dfile=$(Build.Repository.LocalPath)/target/scala-2.11/hive-warehouse-connector-assembly-1.0.0-MOJIO-2.jar \
                        -Dtoken=$(githubPackagesPassword) \
                        -DgeneratePom=true \
                        -DgeneratePom.description="Mojio Hive Connector" \
